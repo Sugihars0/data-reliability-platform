@@ -1,0 +1,13 @@
+# Docker Compose configuration for the Data Reliability Platform.
+# This file will be expanded in future sessions to run:
+# - online PostgreSQL database
+# - offline PostgreSQL database
+# - Airflow
+# - supporting services
+
+services:
+  # Placeholder service.
+  # Real services will be added in the next implementation session.
+  placeholder:
+    image: alpine:latest
+    command: ["echo", "Data Reliability Platform Docker placeholder"]
