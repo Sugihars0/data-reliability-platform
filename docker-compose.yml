@@ -6,8 +6,6 @@
 # - supporting services
 
 services:
-  # Placeholder service.
-  # Real services will be added in the next implementation session.
   placeholder:
     image: alpine:latest
     command: ["echo", "Data Reliability Platform Docker placeholder"]
