@@ -53,6 +53,22 @@ powershell -ExecutionPolicy Bypass -File .\scripts\apply_migrations.ps1
 
 Only run the migration script on a fresh database. It will fail if the target tables already exist.
 
+### Seed Online Transaction Data
+
+After applying the migrations, load the synthetic e-wallet transactions:
+
+```powershell
+.\scripts\seed_online_transactions.ps1
+```
+
+If PowerShell blocks the script, run it with a temporary execution policy bypass:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\seed_online_transactions.ps1
+```
+
+Do not run the seed script twice on the same database. Duplicate `transaction_id` values will cause it to fail.
+
 Verify the online database table:
 
 ```powershell
