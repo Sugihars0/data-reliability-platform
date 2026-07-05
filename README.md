@@ -19,3 +19,62 @@ If another engineer joins this project, they should be able to understand the fo
 
 6. **How to Run the Project Locally**
    Understand how to clone the repository, set up the environment, start the services, run the pipeline, execute tests, and verify that everything works correctly.
+
+## Local Setup
+
+The V1 local environment uses two PostgreSQL containers:
+
+- `online_postgres` simulates the source transaction database.
+- `offline_postgres` stores the lake, delta, ODS, and data quality tables.
+
+Start both databases:
+
+```powershell
+docker compose up -d
+```
+
+Check that both containers are running and healthy:
+
+```powershell
+docker compose ps
+```
+
+Apply the V1 migrations from the repository root:
+
+```powershell
+.\scripts\apply_migrations.ps1
+```
+
+If PowerShell blocks the script, run it with a temporary execution policy bypass:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\apply_migrations.ps1
+```
+
+Only run the migration script on a fresh database. It will fail if the target tables already exist.
+
+Verify the online database table:
+
+```powershell
+docker compose exec online_postgres psql -U postgres -d online_db -c "\dt"
+```
+
+Verify the offline database tables:
+
+```powershell
+docker compose exec offline_postgres psql -U postgres -d offline_db -c "\dt"
+```
+
+Stop the containers without deleting their data:
+
+```powershell
+docker compose down
+```
+
+To reset the local databases, stop the containers and delete their named volumes:
+
+```powershell
+docker compose down -v
+```
+
+**Warning:** `docker compose down -v` permanently deletes all data stored in the local PostgreSQL volumes.
