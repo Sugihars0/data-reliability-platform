@@ -1,11 +1,38 @@
-# Docker Compose configuration for the Data Reliability Platform.
-# This file will be expanded in future sessions to run:
-# - online PostgreSQL database
-# - offline PostgreSQL database
-# - Airflow
-# - supporting services
-
 services:
-  placeholder:
-    image: alpine:latest
-    command: ["echo", "Data Reliability Platform Docker placeholder"]
+  # Simulates the operational database that produces transaction records.
+  online_postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: online_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - online_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d online_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Stores the lake, delta, ODS, and data quality tables.
+  offline_postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: offline_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - offline_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d offline_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  online_postgres_data:
+  offline_postgres_data:
